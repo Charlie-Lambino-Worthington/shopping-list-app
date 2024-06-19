@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
 <!-- index.html content starts here -->
@@ -15,10 +15,10 @@
                         <div class="card-body">
                             <div class="image-container">
                                 <div class="image-flash">
-                                    <h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2>
+                                   <a href="{% url 'post_detail' post.slug %}"><h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2></a> 
                                 </div>
                             </div>
-                                <h6 class="content">{{ post.content }}</h6>
+                                <h6 class="content">{{ post.content | safe}}</h6>
                             <hr />
                             <p class="card-text text-muted h6">{{ post.created_on}}
                             </p>
@@ -43,6 +43,22 @@
         </ul>
     </nav>
     {% endif %}
+    <!-- Creating New list -->
+    <div class="col-md-4 card mb-4 mt-3">
+        <div class="card-body">
+          {% if user.is_authenticated %}
+          <h3>Add a new list:</h3>
+          <p>Posting as: {{ user.username }}</p>
+          <form id="postForm" method="post"
+            style="margin-top: 1.3em;">
+            {{ post_form | crispy }}
+            {% csrf_token %}
+            <button id="submitButton" type="submit"
+              class="btn btn-signup btn-lg">Submit</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
 </div>
 
 <!-- index.html content ends here -->
