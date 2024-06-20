@@ -1,3 +1,5 @@
+
+
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -13,15 +15,18 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div class="image-container">
-                                <div class="image-flash">
-                                   <a href="{% url 'post_detail' post.slug %}"><h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2></a> 
+                                <div>
+                                   <a href="{% url 'post_detail' post.slug %}">
+                                        <h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2>
+                                    </a> 
                                 </div>
-                            </div>
-                                <h6 class="content">{{ post.content | safe}}</h6>
-                            <hr />
-                            <p class="card-text text-muted h6">{{ post.created_on}}
-                            </p>
+                                <div>
+                                    <h6 class="content">{{ post.content | truncatechars:100 | safe}}</h6>
+                                    <h6>...</h6>
+                                    <hr>
+                                    <p class="card-text text-muted h6">{{ post.created_on}}</p>
+                                </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -49,9 +54,9 @@
           {% if user.is_authenticated %}
           <h3>Add a new list:</h3>
           <p>Posting as: {{ user.username }}</p>
-          <form id="postForm" method="post"
+          <form id="PostForm" method="post"
             style="margin-top: 1.3em;">
-            {{ post_form | crispy }}
+            {{ form|crispy }}
             {% csrf_token %}
             <button id="submitButton" type="submit"
               class="btn btn-signup btn-lg">Submit</button>
