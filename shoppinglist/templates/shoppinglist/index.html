@@ -1,10 +1,7 @@
-
-
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
 
-<!-- index.html content starts here -->
 <div class="container-fluid">
     <div class="row">
 
@@ -15,18 +12,21 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
-                                <div>
-                                   <a href="{% url 'post_detail' post.slug %}">
-                                        <h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2>
-                                    </a> 
-                                </div>
-                                <div>
-                                    <h6 class="content">{{ post.content | truncatechars:100 | safe}}</h6>
-                                    <h6>...</h6>
-                                    <hr>
-                                    <p class="card-text text-muted h6">{{ post.created_on}}</p>
-                                </div>
-                            
+                            <div>
+                                <a href="{% url 'post_detail' post.slug %}">
+                                    <h2 class="shoplist post-link">Shopping list: {{ post.title }}</h2>
+                                </a>
+                            </div>
+                            <div>
+                                <h6 class="content">{{ post.content | truncatechars:100 | safe }}</h6>
+                                <h6>...</h6>
+                                <hr>
+                                <p class="card-text text-muted h6">{{ post.created_on }}</p>
+                            </div>
+                            {% if user.is_authenticated and post.author == user %}
+                            <button class="btn btn-delete" data-post_id="{{ post.id }}">Delete</button>
+                            <button class="btn btn-edit" data-post_id="{{ post.id }}">Edit</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -35,10 +35,10 @@
             <div class="row">
                 {% endif %}
                 {% endfor %}
-
             </div>
         </div>
     </div>
+
     {% if is_paginated %}
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
@@ -48,23 +48,20 @@
         </ul>
     </nav>
     {% endif %}
+
     <!-- Creating New list -->
     <div class="col-md-4 card mb-4 mt-3">
         <div class="card-body">
           {% if user.is_authenticated %}
           <h3>Add a new list:</h3>
           <p>Posting as: {{ user.username }}</p>
-          <form id="PostForm" method="post"
-            style="margin-top: 1.3em;">
+          <form id="PostForm" method="post" style="margin-top: 1.3em;">
             {{ form|crispy }}
             {% csrf_token %}
-            <button id="submitButton" type="submit"
-              class="btn btn-signup btn-lg">Submit</button>
+            <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
           </form>
           {% endif %}
         </div>
       </div>
 </div>
-
-<!-- index.html content ends here -->
 {% endblock %}

@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-charlielamb-shoppinglis-5qm77bphtw5.ws-eu114.gitpod.io', '.herokuapp.com']
+ALLOWED_HOSTS = ['8000-charlielamb-shoppinglis-q1a3bsvwmhy.ws.codeinstitute-ide.net', '.herokuapp.com']
 
 
 # Application definition
@@ -100,7 +100,8 @@ DATABASES = {
 }
 CSRF_TRUSTED_ORIGINS = [
     "https://*.gitpod.io",
-    "https://*.herokuapp.com"
+    "https://*.herokuapp.com",
+    "https://8000-charlielamb-shoppinglis-q1a3bsvwmhy.ws.codeinstitute-ide.net",
 ]
 
 # Password validation

@@ -1,6 +1,6 @@
 const editButtons = document.getElementsByClassName("btn-edit");
 const postText = document.getElementById("id_body");
-const postForm = document.getElementById("PostForm");
+const postForm = document.getElementById("postForm");
 const submitButton = document.getElementById("submitButton");
 
 const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
@@ -19,7 +19,7 @@ const deleteConfirm = document.getElementById("deleteConfirm");
 for (let button of editButtons) {
   button.addEventListener("click", (e) => {
     let postId = e.target.getAttribute("post_id");
-    let postContent = document.getElementById(`post${postIdId}`).innerText;
+    let postContent = document.getElementById(`post${postId}`).innerText;
     postText.value = postContent;
     submitButton.innerText = "Update";
     postForm.setAttribute("action", `edit_post/${postId}`);
@@ -37,8 +37,9 @@ for (let button of editButtons) {
 * the user for confirmation before deletion.
 */
 for (let button of deleteButtons) {
-  button.addEventListener("click", (e) => {
-    let postId = e.target.getAttribute("data-post_id");
-    deleteConfirm.href = `delete_post/${postId}`;
-    deleteModal.show();
-  });
+    button.addEventListener("click", (e) => {
+      let postId = e.target.getAttribute("data-post_id");
+      deleteConfirm.href = `delete_post/${postId}`;
+      deleteModal.show();
+    });
+  }

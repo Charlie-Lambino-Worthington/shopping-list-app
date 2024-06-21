@@ -22,7 +22,10 @@
                 <p class="card-text">
                     {{ post.content | safe }}
                 </p>
-                <button class="btn btn-delete" data-post_id="{{ post.slug }}">Delete</button>
+                  {% if user.is_authenticated and post.author == user %}
+                    <button class="btn btn-delete btn-danger" data-post_id="{{ post.slug }}">Delete</button>
+                    <button class="btn btn-edit btn-primary" data-post_id="{{ post.slug }}">Edit</button>
+                  {% endif %}
             </div>
         </div>
     </div>
@@ -45,5 +48,21 @@
     </div>
   </div>
 </div>
-<script src="{% static 'js/script.js' %}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+    const deleteButtons = document.getElementsByClassName("btn-delete");
+    const deleteConfirm = document.getElementById("deleteConfirm");
+    
+    for (let button of deleteButtons) {
+      button.addEventListener("click", (e) => {
+        let postSlug = e.target.getAttribute("data-post_id");
+        deleteConfirm.href = `/${postSlug}/delete/`;
+        deleteModal.show();
+      });
+    }
+  });
+</script>
+
 {% endblock content %}
