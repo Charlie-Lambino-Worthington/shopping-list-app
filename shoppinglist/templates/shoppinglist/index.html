@@ -23,10 +23,7 @@
                                 <hr>
                                 <p class="card-text text-muted h6">{{ post.created_on }}</p>
                             </div>
-                            {% if user.is_authenticated and post.author == user %}
-                            <button class="btn btn-delete" data-post_id="{{ post.id }}">Delete</button>
-                            <button class="btn btn-edit" data-post_id="{{ post.id }}">Edit</button>
-                            {% endif %}
+                            
                         </div>
                     </div>
                 </div>
