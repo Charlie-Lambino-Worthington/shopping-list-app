@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, EditForm
 
 class PostList(LoginRequiredMixin, generic.ListView):
     template_name = "shoppinglist/index.html"
@@ -37,7 +37,8 @@ def post_detail(request, slug):
     queryset = Post.objects.filter(author=request.user)
     post = get_object_or_404(queryset, slug=slug)
     post_form = PostForm()
-    return render(request, "shoppinglist/post_detail.html", {"post": post, "post_form": post_form})
+    edit_form = EditForm(instance=post)
+    return render(request, "shoppinglist/post_detail.html", {"post": post, "post_form": post_form, "edit_form": edit_form})
 
 @login_required
 def post_delete(request, slug):
@@ -50,12 +51,12 @@ def post_delete(request, slug):
     return HttpResponseRedirect(reverse('home'))
 
 @login_required
-def post_edit(request, slug, post_id):
+def post_edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     if request.method == "POST":
-        post = get_object_or_404(Post, pk=post_id)
-        post_form = PostForm(data=request.POST, instance=post)
-        if post_form.is_valid() and post.author == request.user:
-            post_form.save()
+        edit_form = EditForm(request.POST, instance=post)
+        if edit_form.is_valid() and post.author == request.user:
+            edit_form.save()
             messages.add_message(request, messages.SUCCESS, 'Post updated!')
         else:
             messages.add_message(request, messages.ERROR, 'Error updating post!')

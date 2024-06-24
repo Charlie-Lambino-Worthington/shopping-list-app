@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 {% load static %}
 <div class="masthead">
@@ -22,31 +23,54 @@
                 <p class="card-text">
                     {{ post.content | safe }}
                 </p>
-                  {% if user.is_authenticated and post.author == user %}
+                {% if user.is_authenticated and post.author == user %}
                     <button class="btn btn-delete btn-danger" data-post_id="{{ post.slug }}">Delete</button>
                     <button class="btn btn-edit btn-primary" data-post_id="{{ post.slug }}">Edit</button>
-                  {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
 <!-- Delete confirmation modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete your post? This action cannot be undone.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your post? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="post">
+                    {{ edit_form|crispy }}
+                    {% csrf_token %}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -54,12 +78,24 @@
     const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
     const deleteButtons = document.getElementsByClassName("btn-delete");
     const deleteConfirm = document.getElementById("deleteConfirm");
-    
+
     for (let button of deleteButtons) {
       button.addEventListener("click", (e) => {
         let postSlug = e.target.getAttribute("data-post_id");
         deleteConfirm.href = `/${postSlug}/delete/`;
         deleteModal.show();
+      });
+    }
+
+    const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+    const editButtons = document.getElementsByClassName("btn-edit");
+    const editForm = document.getElementById("editForm");
+
+    for (let button of editButtons) {
+      button.addEventListener("click", (e) => {
+        let postSlug = e.target.getAttribute("data-post_id");
+        editForm.action = `/${postSlug}/edit/`;
+        editModal.show();
       });
     }
   });
